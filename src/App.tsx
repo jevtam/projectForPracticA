@@ -141,11 +141,11 @@ function Dashboard({ operations }: { operations: Operation[] }) {
     EMPLOYEES_COUNT > 0 ? metrics.profit / EMPLOYEES_COUNT : 0;
 
   const chartData = buildChartData(operations, period);
+
   const chartMax = chartData.length
     ? Math.max(...chartData.map((p) => Math.max(p.income, p.expense)), 1)
     : 1;
-
-  const maxBarHeight = 100; //пиксели
+  const maxBarHeight = 140; // пиксели
 
   return (
     <section className="space-y-4">
@@ -230,22 +230,22 @@ function Dashboard({ operations }: { operations: Operation[] }) {
               return (
                 <div
                   key={point.date}
-                  className="flex-1 flex flex-col items-center gap-1 min-w-[40px]"
+                  className="flex flex-col items-center gap-1 min-w-[48px]"
                 >
-                  <div className="w-full flex-1 flex flex-col justify-end gap-1">
-                    {/*доходы*/}
+                  {/*столбики дохода и расхода с общей базой*/}
+                  <div className="w-full flex-1 flex items-end gap-1">
                     <div
-                      className="w-full bg-emerald-400/80 rounded-md"
+                      className="flex-1 bg-emerald-400/80 rounded-t-md"
                       style={{ height: `${incomeHeight}px` }}
                       title={`Доход: ${formatMoney(point.income)}`}
                     />
-                    {/*расходы*/}
                     <div
-                      className="w-full bg-rose-400/80 rounded-md"
+                      className="flex-1 bg-rose-400/80 rounded-t-md"
                       style={{ height: `${expenseHeight}px` }}
                       title={`Расход: ${formatMoney(point.expense)}`}
                     />
                   </div>
+                  {/*подпись даты*/}
                   <div className="text-[10px] text-slate-400 text-center leading-tight">
                     {point.label}
                   </div>
