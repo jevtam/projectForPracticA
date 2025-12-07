@@ -38,10 +38,6 @@ export default function App() {
             <h1 className="text-2xl md:text-3xl font-semibold">
               Сервис для малого бизнеса
             </h1>
-            <p className="text-xs text-slate-400 mt-1">Core-модуль</p>
-          </div>
-          <div className="text-xs text-slate-400 mt-2 md:mt-0">
-            Учёт доходов, расходов и зарплат
           </div>
         </header>
 
@@ -153,10 +149,6 @@ function Dashboard({ operations }: { operations: Operation[] }) {
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3">
         <div>
           <SectionTitle>Дашборд</SectionTitle>
-          <SectionDescription>
-            Ключевые показатели: выручка, расходы, чистая прибыль, налоговая
-            нагрузка и средняя прибыль на сотрудника.
-          </SectionDescription>
         </div>
         <div className="flex gap-2 text-xs">
           <PeriodButton
@@ -175,7 +167,7 @@ function Dashboard({ operations }: { operations: Operation[] }) {
             onClick={() => setPeriod("month")}
           />
           <PeriodButton
-            label="Всё время"
+            label="Все время"
             active={period === "all"}
             onClick={() => setPeriod("all")}
           />
@@ -261,7 +253,7 @@ function Dashboard({ operations }: { operations: Operation[] }) {
         Налоговая нагрузка считается как {TAX_RATE * 100}% от выручки. Средняя
         прибыль на сотрудника пока рассчитана исходя из {EMPLOYEES_COUNT}{" "}
         сотрудника(ов); на следующем этапе это значение будет связано с модулем
-        учёта зарплат.
+        учета зарплат.
       </div>
     </section>
   );
@@ -379,11 +371,7 @@ function Operations({
   return (
     <section className="space-y-4">
       <div>
-        <SectionTitle>Учёт доходов и расходов</SectionTitle>
-        <SectionDescription>
-          Ввод операций, категоризация (аренда, закупки, реклама и т.п.) и
-          отчёты по периодам.
-        </SectionDescription>
+        <SectionTitle>Учет доходов и расходов</SectionTitle>
       </div>
 
       {/*форма*/}
@@ -494,7 +482,7 @@ function Operations({
         <MetricCard label="Всего доходов" value={formatMoney(totalIncome)} />
         <MetricCard label="Всего расходов" value={formatMoney(totalExpense)} />
         <MetricCard
-          label="Итог за всё время"
+          label="Итог за все время"
           value={formatMoney(totalIncome - totalExpense)}
         />
       </div>
@@ -611,7 +599,7 @@ function Payroll() {
     <section className="space-y-3">
       <SectionTitle>Зарплаты сотрудников</SectionTitle>
       <SectionDescription>
-        Модуль расчёта смен и зарплат будет реализован на следующем этапе.
+        Модуль расчета смен и зарплат будет реализован на следующем этапе.
       </SectionDescription>
     </section>
   );
