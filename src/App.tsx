@@ -2,7 +2,7 @@ import { useState } from "react";
 import type { Operation, OperationInput } from "./types/operation";
 import { operationsStorage } from "./storage/operationsStorage";
 
-type Tab = "dashboard" | "operations" | "payroll" | "settings";
+type Tab = "dashboard" | "operations";
 
 export default function App() {
   const [tab, setTab] = useState<Tab>("dashboard");
@@ -52,8 +52,6 @@ export default function App() {
               onDeleteOperation={handleDeleteOperation}
             />
           )}
-          {tab === "payroll" && <Payroll />}
-          {tab === "settings" && <Settings />}
         </main>
 
         {/*навигация*/}
@@ -68,16 +66,6 @@ export default function App() {
               label="Операции"
               active={tab === "operations"}
               onClick={() => setTab("operations")}
-            />
-            <NavButton
-              label="Зарплаты"
-              active={tab === "payroll"}
-              onClick={() => setTab("payroll")}
-            />
-            <NavButton
-              label="Настройки"
-              active={tab === "settings"}
-              onClick={() => setTab("settings")}
             />
           </div>
         </nav>
@@ -118,24 +106,17 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
   );
 }
 
-function SectionDescription({ children }: { children: React.ReactNode }) {
-  return <p className="text-sm text-slate-400 mt-1">{children}</p>;
-}
 
 //ДАШБОРД
 type Period = "day" | "week" | "month" | "all";
 
 const TAX_RATE = 0.06; //условная ставка налога 6% от выручки (например, УСН)
-const EMPLOYEES_COUNT = 1; //пока считаем, что 1 сотрудник; позже свяжем с модулем зарплат
 
 function Dashboard({ operations }: { operations: Operation[] }) {
   const [period, setPeriod] = useState<Period>("month");
 
   const metrics = calculateMetrics(operations, period);
   const tax = Math.max(metrics.income, 0) * TAX_RATE;
-  const avgProfitPerEmployee =
-    EMPLOYEES_COUNT > 0 ? metrics.profit / EMPLOYEES_COUNT : 0;
-
   const chartData = buildChartData(operations, period);
 
   const chartMax = chartData.length
@@ -183,10 +164,6 @@ function Dashboard({ operations }: { operations: Operation[] }) {
           value={formatMoney(metrics.profit)}
         />
         <MetricCard label="Налоговая нагрузка" value={formatMoney(tax)} />
-        <MetricCard
-          label="Прибыль на сотрудника"
-          value={formatMoney(avgProfitPerEmployee)}
-        />
       </div>
 
       {/*график по дням*/}
@@ -246,14 +223,6 @@ function Dashboard({ operations }: { operations: Operation[] }) {
             })}
           </div>
         )}
-      </div>
-
-      {/*доп. инфо*/}
-      <div className="text-xs text-slate-500">
-        Налоговая нагрузка считается как {TAX_RATE * 100}% от выручки. Средняя
-        прибыль на сотрудника пока рассчитана исходя из {EMPLOYEES_COUNT}{" "}
-        сотрудника(ов); на следующем этапе это значение будет связано с модулем
-        учета зарплат.
       </div>
     </section>
   );
@@ -589,29 +558,6 @@ function Operations({
           </div>
         )}
       </div>
-    </section>
-  );
-}
-
-//ЗАГЛУШКИ
-function Payroll() {
-  return (
-    <section className="space-y-3">
-      <SectionTitle>Зарплаты сотрудников</SectionTitle>
-      <SectionDescription>
-        Модуль расчета смен и зарплат будет реализован на следующем этапе.
-      </SectionDescription>
-    </section>
-  );
-}
-
-function Settings() {
-  return (
-    <section className="space-y-3">
-      <SectionTitle>Настройки</SectionTitle>
-      <SectionDescription>
-        Здесь будут параметры налоговой ставки, валюты и резервного копирования.
-      </SectionDescription>
     </section>
   );
 }
