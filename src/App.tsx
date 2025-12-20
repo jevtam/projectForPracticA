@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { Operation, OperationInput } from "./types/operation";
 import { operationsStorage } from "./storage/operationsStorage";
+import { exportOperationsToExcel } from "./utils/exportOperationsToExcel";
 
 type Tab = "dashboard" | "operations";
 
@@ -106,7 +107,6 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
   );
 }
 
-
 //ДАШБОРД
 type Period = "day" | "week" | "month" | "all";
 
@@ -131,7 +131,7 @@ function Dashboard({ operations }: { operations: Operation[] }) {
         <div>
           <SectionTitle>Дашборд</SectionTitle>
         </div>
-        <div className="flex gap-2 text-xs">
+        <div className="flex flex-wrap gap-2 text-xs items-center">
           <PeriodButton
             label="День"
             active={period === "day"}
@@ -148,15 +148,29 @@ function Dashboard({ operations }: { operations: Operation[] }) {
             onClick={() => setPeriod("month")}
           />
           <PeriodButton
-            label="Все время"
+            label="Всё время"
             active={period === "all"}
             onClick={() => setPeriod("all")}
           />
+
+          <button
+            type="button"
+            disabled={operations.length === 0}
+            onClick={() => exportOperationsToExcel(operations, period)}
+            className={
+              "ml-0 md:ml-2 px-3 py-2 rounded-md text-sm font-medium transition " +
+              (operations.length === 0
+                ? "bg-slate-800 text-slate-500 cursor-not-allowed"
+                : "bg-emerald-600 hover:bg-emerald-500 text-white")
+            }
+          >
+            Выгрузить в Excel
+          </button>
         </div>
       </div>
 
       {/*карточки метрик*/}
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <MetricCard label="Выручка" value={formatMoney(metrics.income)} />
         <MetricCard label="Расходы" value={formatMoney(metrics.expense)} />
         <MetricCard
@@ -339,7 +353,7 @@ function Operations({
 
   return (
     <section className="space-y-4">
-      <div>
+      <div className="flex items-center justify-between gap-3">
         <SectionTitle>Учет доходов и расходов</SectionTitle>
       </div>
 
